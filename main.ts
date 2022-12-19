@@ -9,6 +9,12 @@ input.onButtonPressed(Button.AB, function () {
     Tmin = input.temperature()
     Tmax = input.temperature()
     music.startMelody(music.builtInMelody(Melodies.Entertainer), MelodyOptions.Once)
+    datalogger.deleteLog()
+    datalogger.setColumnTitles(
+    "Temp",
+    "Time",
+    "MaxMin"
+    )
 })
 input.onButtonPressed(Button.B, function () {
     music.startMelody(music.builtInMelody(Melodies.PowerDown), MelodyOptions.Once)
@@ -16,10 +22,10 @@ input.onButtonPressed(Button.B, function () {
     basic.showNumber(Tmin)
 })
 basic.forever(function () {
+    if (input.logoIsPressed()) {
+        basic.showNumber(input.temperature())
+    }
     if (input.temperature() > Tmax) {
-        if (input.logoIsPressed()) {
-            basic.clearScreen()
-        }
         music.startMelody(music.builtInMelody(Melodies.JumpUp), MelodyOptions.Once)
         Tmax = input.temperature()
         basic.showLeds(`
@@ -29,6 +35,8 @@ basic.forever(function () {
             . . # . .
             . . # . .
             `)
+        datalogger.includeTimestamp(FlashLogTimeStampFormat.Minutes)
+        datalogger.log(datalogger.createCV("Temp", Tmax))
     }
     if (input.temperature() < Tmin) {
         music.startMelody(music.builtInMelody(Melodies.JumpDown), MelodyOptions.Once)
@@ -40,5 +48,7 @@ basic.forever(function () {
             . # # # .
             . . # . .
             `)
+        datalogger.includeTimestamp(FlashLogTimeStampFormat.Minutes)
+        datalogger.log(datalogger.createCV("Temp", Tmin))
     }
 })
