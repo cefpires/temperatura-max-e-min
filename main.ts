@@ -1,6 +1,5 @@
 let Tmax = 0
 let Tmin = 0
-let Temp = 0
 input.onButtonPressed(Button.A, function () {
     music.startMelody(music.builtInMelody(Melodies.PowerUp), MelodyOptions.Once)
     basic.showString("T max")
@@ -9,6 +8,7 @@ input.onButtonPressed(Button.A, function () {
 input.onButtonPressed(Button.AB, function () {
     Tmin = input.temperature()
     Tmax = input.temperature()
+    music.startMelody(music.builtInMelody(Melodies.Entertainer), MelodyOptions.Once)
 })
 input.onButtonPressed(Button.B, function () {
     music.startMelody(music.builtInMelody(Melodies.PowerDown), MelodyOptions.Once)
@@ -17,6 +17,9 @@ input.onButtonPressed(Button.B, function () {
 })
 basic.forever(function () {
     if (input.temperature() > Tmax) {
+        if (input.logoIsPressed()) {
+            basic.clearScreen()
+        }
         music.startMelody(music.builtInMelody(Melodies.JumpUp), MelodyOptions.Once)
         Tmax = input.temperature()
         basic.showLeds(`
@@ -38,5 +41,4 @@ basic.forever(function () {
             . . # . .
             `)
     }
-    Temp = input.temperature()
 })
